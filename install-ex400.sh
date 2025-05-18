@@ -8,6 +8,17 @@ FACTORY_FILENAME="openwrt-ramips-mt7621-genexis_pulse-ex400-factory.bin"
 
 SYSUPGRADE_FILENAME="gluon-ffda-3.0.6~20250515-ea0b4f1-genexis-pulse-ex400-sysupgrade.bin"
 
+
+if [ ! -f "$FACTORY_FILENAME" ]; then
+	echo "${FACTORY_FILENAME} doesn't exist. Please add it"
+	exit 1
+fi
+
+if [ ! -f "$SYSUPGRADE_FILENAME" ]; then
+	echo "$SYSUPGRADE_FILENAME doesn't exist. Please add it"
+	exit 1
+fi
+
 function wait_until_as_expected {
 	TARGET_URL=$1
 	TARGET_STRING=$2
