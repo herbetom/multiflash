@@ -6,6 +6,8 @@ set -x
 FACTORY_FILENAME="openwrt-ramips-mt7621-genexis_pulse-ex400-factory.bin"
 #FACTORY_FILENAME="openwrt-24.10.1-df5c5ed0dff7-ramips-mt7621-genexis_pulse-ex400-factory.bin"
 
+SYSUPGRADE_FILENAME="gluon-ffda-3.0.6~20250515-ea0b4f1-genexis-pulse-ex400-sysupgrade.bin"
+
 function wait_until_as_expected {
 	TARGET_URL=$1
 	TARGET_STRING=$2
@@ -33,7 +35,7 @@ function uploadFactoryFileEX400 {
 function repeat_ssh() {
 	COMMAND=$1
 
-	until ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.1.1 $COMMAND; do
+	until ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=2 root@192.168.1.1 $COMMAND; do
 		sleep 2
 	done
 }
@@ -42,13 +44,13 @@ wait_until_as_expected "http://192.168.1.1/" "fileID"
 sleep 2
 
 uploadFactoryFileEX400 "${FACTORY_FILENAME}"
-#sleep 20
+sleep 20
 
 repeat_ssh "uname -a"
 sleep 2
 
 echo "copying gluon"
-scp -O -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null gluon-ffda-3.0.6~20250515-ea0b4f1-genexis-pulse-ex400-sysupgrade.bin root@192.168.1.1:/tmp/gluon.bin
+scp -O -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SYSUPGRADE_FILENAME root@192.168.1.1:/tmp/gluon.bin
 sleep 1
 echo "installing gluon"
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.1.1 "/sbin/sysupgrade -n /tmp/gluon.bin || true"
