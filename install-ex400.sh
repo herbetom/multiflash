@@ -104,9 +104,9 @@ scp -O -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SYSUPGRADE_F
 sleep 1
 echo "install gluon"
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.1.1 "/sbin/sysupgrade -n /tmp/gluon.bin || true"
-sleep 5
 
-echo "wait until reachable again"
-repeat_ssh "gluon-info"
+#sleep 5
+#echo "wait until reachable again"
+#repeat_ssh "gluon-info"
 
-configure
+#configure
