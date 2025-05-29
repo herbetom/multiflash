@@ -3,6 +3,15 @@
 set -euo pipefail
 set -x
 
+# The idea is to setup an Network Namespace enviroment to parralize flashing
+# in a bunch of VLANs.
+# So you get yourself a switch, configure a bunch of untagged VLANs on all
+# the ports and then a trunk port for your PC.
+# And then you can parralize flashing.
+#
+# Not finished yet.
+
+
 if ! command -v nft 2>&1 > /dev/null
 then
 	echo "nft could not be found but is needed"
