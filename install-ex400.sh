@@ -3,7 +3,7 @@
 set -euo pipefail
 set -x
 
-# This scripts that you've statically configured an IP from within 192.168.1.0/24
+# This scripts expects that you've statically configured an IP from within 192.168.1.0/24
 # on one of your interfaces. You can't choose 192.168.1.1.
 # A valid choice could be for example 192.168.1.66/24 (Mask: 255.255.255.0).
 #
@@ -59,37 +59,6 @@ function repeat_ssh() {
 	done
 }
 
-function configure_node() {
-	echo "configure contact"
-	repeat_ssh "uci get gluon-node-info.@owner[0] || uci add gluon-node-info owner"
-	repeat_ssh "uci set gluon-node-info.@owner[0].contact=info@darmstadt.freifunk.net"
-
-	echo "configure ssh"
-	repeat_ssh "uci set ffda-ssh-manager.settings.enabled='1'"
-	repeat_ssh "uci add_list ffda-ssh-manager.settings.groups='ffda'"
-
-	echo "configuring mesh"
-	repeat_ssh "uci del_list gluon.iface_wan.role='uplink'"
-	repeat_ssh "uci add_list gluon.iface_wan.role='mesh'"
-	repeat_ssh "uci del_list gluon.iface_wan.role='client'"
-	repeat_ssh "uci add_list gluon.iface_lan.role='mesh'"
-
-	echo "configure domain"
-	repeat_ssh "uci set gluon.core.domain=ffda_da_240"
-
-	echo "disable setup mode"
-	repeat_ssh "uci set gluon-setup-mode.@setup_mode[0].enabled='0'"
-	repeat_ssh "uci set gluon-setup-mode.@setup_mode[0].configured='1'"
-
-	echo "save all changes"
-	repeat_ssh "uci commit"
-
-	echo "configure node according to new parameters"
-	repeat_ssh "gluon-reconfigure"
-
-	repeat_ssh "reboot"
-}
-
 wait_until_as_expected "http://192.168.1.1/" "fileID"
 sleep 2
 
@@ -108,5 +77,3 @@ ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.1.1
 #sleep 5
 #echo "wait until reachable again"
 #repeat_ssh "gluon-info"
-
-#configure
