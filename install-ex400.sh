@@ -14,7 +14,7 @@ set -x
 
 FACTORY_FILENAME="openwrt-ramips-mt7621-genexis_pulse-ex400-factory.bin"
 
-SYSUPGRADE_FILENAME="gluon-ffda-3.0.6~20250515-ea0b4f1-genexis-pulse-ex400-sysupgrade.bin"
+SYSUPGRADE_FILENAME="gluon-ffda-3.0.7-genexis-pulse-ex400-sysupgrade.bin"
 
 
 if [ ! -f "$FACTORY_FILENAME" ]; then
